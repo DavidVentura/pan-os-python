@@ -4185,7 +4185,7 @@ class PanDevice(PanObject):
         - multi_vsys (if this is a :class:`panos.firewall.Firewall`)
 
         Returns:
-            namedtuple: version, platform, serial
+            namedtuple: version, platform, serial, hostname
         """
         #       This section is commented because version api cannot be targeted
         #       on Panorama.  When this feature is added, ok to uncomment this.
@@ -4219,7 +4219,7 @@ class PanDevice(PanObject):
 
         # Return the important fields as a namedtuple
         SystemInfo = collections.namedtuple(
-            "SystemInfo", ["version", "platform", "serial"]
+            "SystemInfo", ["version", "platform", "serial", "hostname"]
         )
 
         return SystemInfo(self.version, self.platform, self.serial)
@@ -4231,6 +4231,7 @@ class PanDevice(PanObject):
             * Save the PANOS version so that we can make versioning decisions
             * Save the platform
             * Save the serial number
+            * Save the hostname
 
         Subclasses may super() this function to get the shared functionality,
         then save anything specific to them.
@@ -4242,6 +4243,7 @@ class PanDevice(PanObject):
         self._set_version_and_version_info(system_info["system"]["sw-version"])
         self.platform = system_info["system"]["model"]
         self.serial = system_info["system"]["serial"]
+        self.hostname = system_info["system"]["hostname"]
 
     def _set_version_and_version_info(self, version):
         """Sets the version and the specially formatted versioning version."""
